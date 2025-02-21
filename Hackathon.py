@@ -17,7 +17,6 @@ df = df.dropna(subset=['choice'])
 # Forward-fill missing values
 df.ffill(inplace=True)
 
-# Save a copy of original data to handle "no choice" later
 original_df = df.copy()
 
 # Encode categorical labels
@@ -25,13 +24,11 @@ le = LabelEncoder()
 df['choice'] = le.fit_transform(df['choice'])
 df['od'] = le.fit_transform(df['od'])
 
-# Filter out "no choice" for training, keep only ADVS and PREF
 df = df[df['choice'] != 2]
 
 df['price_diff'] = df['PREF_price'] - df['ADVS_price']
 df['price_ratio'] = df['PREF_price'] / (df['ADVS_price'] + 1)
 
-# Fix occupancy calculation to avoid division by zero
 df['ADVS_occupancy'] = (df['ADVS_capacity'] - df['ADVS_inventory']) / (df['ADVS_capacity'] + 1e-6)
 df['PREF_occupancy'] = (df['PREF_capacity'] - df['PREF_inventory']) / (df['PREF_capacity'] + 1e-6)
 
@@ -86,7 +83,6 @@ print(f'F1 Score: {f1:.4f}')
 # Assign No Choice Customers to ADVS or PREF
 no_choice_customers = original_df[original_df['choice'] == 2].copy()
 
-# Apply same feature transformations
 no_choice_customers['price_diff'] = no_choice_customers['PREF_price'] - no_choice_customers['ADVS_price']
 no_choice_customers['price_ratio'] = no_choice_customers['PREF_price'] / (no_choice_customers['ADVS_price'] + 1)
 no_choice_customers['ADVS_occupancy'] = (no_choice_customers['ADVS_capacity'] - no_choice_customers['ADVS_inventory']) / no_choice_customers['ADVS_capacity']
