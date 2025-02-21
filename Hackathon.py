@@ -9,12 +9,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import accuracy_score, f1_score
 
-df = pd.read_csv(r"C:\Users\Talal.TALALSLAPTOP\OneDrive\Desktop\participant_data.csv")
+df = pd.read_csv("participant_data.csv")
 
 # Drop rows where 'choice' is NaN
 df = df.dropna(subset=['choice'])
 
-# Forward-fill missing values
 df.ffill(inplace=True)
 
 original_df = df.copy()
